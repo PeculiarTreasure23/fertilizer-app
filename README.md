@@ -4,7 +4,7 @@ A simple web app that helps farmers and agricultural engineers check whether a f
 
 Built as an Agricultural and Environmental Engineering project: **"Development of a Software-Based Fertilizer Applicator Calibration and Application Rate Calculator for Smallholder Farmers."**
 
-**Live app:** _paste your GitHub Pages link here_
+**Live app:** https://peculiartreasure23.github.io/fertilizer-app/
 
 ## The problem
 

@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fertilizer Applicator Calibrator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #F5F0E6;
+      color: #2B2A1F;
+      margin: 0;
+      padding: 20px;
+    }
+  
+    header {
+      border-bottom: 3px solid #2B2A1F;
+      padding-bottom: 10px;
+      margin-bottom: 20px;
+    }
+  
+    nav button {
+      background-color: #6B4226;
+      color: white;
+      border: none;
+      padding: 10px 16px;
+      margin-right: 8px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+  
+    nav button:hover {
+      background-color: #4C7A3F;
+    }
+  
+    section {
+      background-color: white;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      padding: 20px;
+      margin-top: 15px;
+      max-width: 500px;
+    }
+  
+    input {
+      padding: 6px;
+      font-size: 14px;
+      border: 1px solid #999;
+      border-radius: 4px;
+    }
+  
+    span {
+      font-weight: bold;
+      color: #6B4226;
+    }
+      #gauge {
+    position: relative;
+    height: 18px;
+    border-radius: 9px;
+    margin: 12px 0 18px;
+    display: none;
+    background: linear-gradient(to right,
+      #B4831F 0%, #B4831F 43.75%,
+      #4C7A3F 43.75%, #4C7A3F 56.25%,
+      #A63D2F 56.25%, #A63D2F 100%);
+  }
+
+  #gaugeMarker {
+    position: absolute;
+    top: -5px;
+    left: 50%;
+    width: 4px;
+    height: 28px;
+    background-color: #2B2A1F;
+    border-radius: 2px;
+    transform: translateX(-50%);
+    transition: left 0.3s ease;
+  }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Fertilizer Applicator Calibration &amp; Rate Calculator</h1>
+  </header>
+
+  <nav>
+    <button onclick="showPage('farm')">1. Farm Calculator</button>
+    <button onclick="showPage('calibration')">2. Calibration</button>
+    <button onclick="showPage('speed')">3. Ground Speed</button>
+  </nav>
+
+  <!-- MODULE 1: FARM CALCULATOR -->
+  <section id="farm">
+    <h2>Farm Fertilizer Requirement</h2>
+
+    <label>Farm area (ha): <input type="number" id="farmArea"></label><br><br>
+    <label>Target rate (kg/ha): <input type="number" id="farmRate"></label><br><br>
+
+    <p>Total fertilizer required: <span id="farmTotal">-</span> kg</p>
+    <p>Bags needed (50 kg each): <span id="farmBags">-</span></p>
+  </section>
+
+  <!-- MODULE 2: CALIBRATION -->
+  <section id="calibration">
+    <h2>Applicator Calibration</h2>
+
+    <label>Calibration distance (m): <input type="number" id="calDistance"></label><br><br>
+    <label>Fertilizer collected (kg): <input type="number" id="calCollected"></label><br><br>
+    <label>Row spacing (m): <input type="number" id="calRowSpacing"></label><br><br>
+    <label>Number of outlets: <input type="number" id="calOutlets"></label><br><br>
+
+    <p>Current application rate: <span id="calRate">-</span> kg/ha</p>
+        <p>Current application rate: <span id="calRate">-</span> kg/ha</p>
+
+    <div id="gauge"><div id="gaugeMarker"></div></div>
+
+    <p id="calVerdict"></p>
+    <label>Target rate (kg/ha): <input type="number" id="calTarget"></label><br><br>
+
+    <p>Current application rate: <span id="calRate">-</span> kg/ha</p>
+    <p id="calVerdict"></p>
+    <p id="envWarning"></p>
+  </section>
+  </section>
+
+  <!-- MODULE 3: GROUND SPEED -->
+  <section id="speed">
+    <h2>Ground Speed Calculator</h2>
+
+    <label>Distance travelled (m): <input type="number" id="speedDistance"></label><br><br>
+    <label>Time taken (s): <input type="number" id="speedTime"></label><br><br>
+
+    <p>Speed: <span id="speedResult">-</span> km/h</p>
+  </section>
+<script>
+
+  function showPage(pageId) {
+    const allPages = ['farm', 'calibration', 'speed'];
+    allPages.forEach(function(id) {
+      const section = document.getElementById(id);
+      if (id === pageId) {
+        section.style.display = 'block';
+      } else {
+        section.style.display = 'none';
+      }
+    });
+  }
+  showPage('farm');
+
+  // ---------- MODULE 1: FARM ----------
+  const farmArea = document.getElementById('farmArea');
+  const farmRate = document.getElementById('farmRate');
+  const farmTotal = document.getElementById('farmTotal');
+  const farmBags = document.getElementById('farmBags');
+    function calculateFarm() {
+    const area = parseFloat(farmArea.value);
+    const rate = parseFloat(farmRate.value);
+    if (area > 0 && rate > 0) {
+      const total = area * rate;
+      farmTotal.textContent = total.toFixed(1);
+      farmBags.textContent = Math.ceil(total / 50);
+    } else {
+      farmTotal.textContent = "-";
+      farmBags.textContent = "-";
+    }
+  }    
+  farmArea.addEventListener('input', calculateFarm);
+  farmRate.addEventListener('input', calculateFarm);
+
+  // ---------- MODULE 2: CALIBRATION ----------
+  const calDistance = document.getElementById('calDistance');
+  const calCollected = document.getElementById('calCollected');
+  const calRowSpacing = document.getElementById('calRowSpacing');
+  const calOutlets = document.getElementById('calOutlets');
+  const calTarget = document.getElementById('calTarget');
+  const calRate = document.getElementById('calRate');
+  const calVerdict = document.getElementById('calVerdict');
+  const envWarning = document.getElementById('envWarning');
+  const gauge = document.getElementById('gauge');
+  const gaugeMarker = document.getElementById('gaugeMarker');
+
+    function calculateCalibration() {
+    const distance = parseFloat(calDistance.value);
+    const collected = parseFloat(calCollected.value);
+    const rowSpacing = parseFloat(calRowSpacing.value);
+    const outlets = parseFloat(calOutlets.value);
+    const target = parseFloat(calTarget.value);
+
+    if (distance > 0 && collected >= 0 && rowSpacing > 0 && outlets > 0) {
+      const effectiveWidth = outlets * rowSpacing;
+      const areaM2 = distance * effectiveWidth;
+      const areaHa = areaM2 / 10000;
+      const rate = collected / areaHa;
+
+      calRate.textContent = rate.toFixed(1);
+
+      if (target > 0) {
+        const percentDiff = ((rate - target) / target) * 100;
+
+        // NEW: move the gauge marker (limit to -40% ... +40%)
+        const clamped = Math.max(-40, Math.min(40, percentDiff));
+        gaugeMarker.style.left = ((clamped + 40) / 80 * 100) + "%";
+        gauge.style.display = "block";
+
+        if (Math.abs(percentDiff) <= 5) {
+          calVerdict.textContent = "🟢 Correctly calibrated";
+          calVerdict.style.color = "#4C7A3F";
+        } else if (percentDiff > 5) {
+          calVerdict.textContent = "🔴 Too high — reduce metering output";
+          calVerdict.style.color = "#A63D2F";
+        } else {
+          calVerdict.textContent = "🟡 Slightly low — increase metering output";
+          calVerdict.style.color = "#B4831F";
+        }
+
+        if (percentDiff > 15) {
+          envWarning.textContent = "⚠ Potential environmental concern: excessive application may increase nutrient runoff or leaching.";
+          envWarning.style.color = "#A63D2F";
+        } else {
+          envWarning.textContent = "";
+        }
+      } else {
+        gauge.style.display = "none";   // NEW
+        calVerdict.textContent = "";
+        envWarning.textContent = "";
+      }
+    } else {
+      gauge.style.display = "none";     // NEW
+      calRate.textContent = "-";
+      calVerdict.textContent = "";
+      envWarning.textContent = "";
+    }
+  }
+
+  calDistance.addEventListener('input', calculateCalibration);
+  calCollected.addEventListener('input', calculateCalibration);
+  calRowSpacing.addEventListener('input', calculateCalibration);
+  calOutlets.addEventListener('input', calculateCalibration);
+  calTarget.addEventListener('input', calculateCalibration);
+
+  // ---------- MODULE 3: SPEED ----------
+  const speedDistance = document.getElementById('speedDistance');
+  const speedTime = document.getElementById('speedTime');
+  const speedResult = document.getElementById('speedResult');
+
+  function calculateSpeed() {
+    const distance = parseFloat(speedDistance.value);
+    const time = parseFloat(speedTime.value);
+    if (distance > 0 && time > 0) {
+      speedResult.textContent = ((distance / time) * 3.6).toFixed(1);
+    } else {
+      speedResult.textContent = "-";
+    }
+  }
+  speedDistance.addEventListener('input', calculateSpeed);
+  speedTime.addEventListener('input', calculateSpeed);
+
+</script>
+  </body>
+</html>

@@ -255,6 +255,10 @@
       speedResult.textContent = "-";
     }
   }
+    // Make the app work offline
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('sw.js');
+  }
   speedDistance.addEventListener('input', calculateSpeed);
   speedTime.addEventListener('input', calculateSpeed);
 
